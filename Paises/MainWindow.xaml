@@ -1,0 +1,16 @@
+﻿<Window x:Class="Paises.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Paises"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="550" Width="1000">
+    <Grid>
+        <ComboBox x:Name="cbCountries" HorizontalAlignment="Left" Margin="229,147,0,0" VerticalAlignment="Top" Width="228"/>
+        <Label Content="Country:" HorizontalAlignment="Left" Margin="162,140,0,0" VerticalAlignment="Top" FontSize="14"/>
+        <Image x:Name="imgFlag" HorizontalAlignment="Left" Height="104" Margin="666,364,0,0" VerticalAlignment="Top" Width="186" Stretch="UniformToFill"/>
+        <Label x:Name="lblInfoCountry" Content="Label" HorizontalAlignment="Left" Margin="229,246,0,0" VerticalAlignment="Top" Height="171" Width="228"/>
+
+    </Grid>
+</Window>
