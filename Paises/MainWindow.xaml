@@ -7,10 +7,14 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="550" Width="1000">
     <Grid>
-        <ComboBox x:Name="cbCountries" HorizontalAlignment="Left" Margin="229,147,0,0" VerticalAlignment="Top" Width="228"/>
-        <Label Content="Country:" HorizontalAlignment="Left" Margin="162,140,0,0" VerticalAlignment="Top" FontSize="14"/>
+        <ComboBox x:Name="cbCountries" HorizontalAlignment="Left" Margin="144,49,0,0" VerticalAlignment="Top" Width="228" SelectionChanged="cbCountries_SelectionChanged"/>
+        <Label Content="Country:" HorizontalAlignment="Left" Margin="76,42,0,0" VerticalAlignment="Top" FontSize="14"/>
         <Image x:Name="imgFlag" HorizontalAlignment="Left" Height="104" Margin="666,364,0,0" VerticalAlignment="Top" Width="186" Stretch="UniformToFill"/>
-        <Label x:Name="lblInfoCountry" Content="Label" HorizontalAlignment="Left" Margin="229,246,0,0" VerticalAlignment="Top" Height="171" Width="228"/>
+        <Label x:Name="lblCapital" Content="Label" HorizontalAlignment="Left" Margin="76,158,0,0" VerticalAlignment="Top" Height="30" Width="230"/>
+        <Label x:Name="lblSubregion" Content="Label" HorizontalAlignment="Left" Margin="76,218,0,0" VerticalAlignment="Top"/>
+        <Label x:Name="lblPopulation" Content="Label" HorizontalAlignment="Left" Margin="76,250,0,0" VerticalAlignment="Top"/>
+        <Label x:Name="lblGini" Content="Label" HorizontalAlignment="Left" Margin="76,280,0,0" VerticalAlignment="Top"/>
+        <Label x:Name="lblRegion" Content="Label" HorizontalAlignment="Left" Margin="76,188,0,0" VerticalAlignment="Top"/>
 
     </Grid>
 </Window>

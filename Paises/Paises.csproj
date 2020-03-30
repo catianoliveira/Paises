@@ -77,6 +77,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Models\Response.cs" />
+    <Compile Include="Services\ApiService.cs" />
+    <Compile Include="Services\DialogService.cs" />
+    <Compile Include="Services\NetworkService.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -91,11 +95,11 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Modelos\Country.cs" />
-    <Compile Include="Modelos\Currency.cs" />
-    <Compile Include="Modelos\Language.cs" />
-    <Compile Include="Modelos\RegionalBlock.cs" />
-    <Compile Include="Modelos\Translations.cs" />
+    <Compile Include="Models\Country.cs" />
+    <Compile Include="Models\Currency.cs" />
+    <Compile Include="Models\Language.cs" />
+    <Compile Include="Models\RegionalBlock.cs" />
+    <Compile Include="Models\Translations.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
