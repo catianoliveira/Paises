@@ -1,8 +1,10 @@
 ﻿using Paises.Modelos;
 using Paises.Services;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Media.Imaging;
 
 namespace Paises
 {
@@ -13,8 +15,6 @@ namespace Paises
     {
         #region Attributes
 
-        //private NetworkService new
-
         private List<Country> Countries;
 
         private NetworkService networkService;
@@ -23,25 +23,28 @@ namespace Paises
 
         private DialogService dialogService;
 
-        //TODO private DataService dataService;
+        private DataService dataService;
 
         #endregion
 
         public MainWindow()
         {
             InitializeComponent();
-            dialogService = new DialogService();
             networkService = new NetworkService();
             apiService = new ApiService();
-            //TODO dataService = new DataService();
+            dataService = new DataService();
+
             LoadCountries();
         }
 
         private async void LoadCountries()
         {
+            dataService.CreateDataCountries();
+            dataService.CreateDataTranslations();
+
             bool load;
 
-            //TODO lblResultado.Text = "Loading countries...";
+            lblResult.Content = "Loading Countries...";
 
             var connection = networkService.CheckConnection();
 
@@ -53,63 +56,99 @@ namespace Paises
 
             else
             {
-                await LoadApi();
+                await LoadApiCountries();
                 load = true;
             }
 
             if (Countries.Count == 0)
             {
-                //lblResultado.Text = "Não há ligação à Internet" + Environment.NewLine
-                //    + "e não foram previamente carregadas as taxas." + Environment.NewLine +
-                //    "Tente mais tarde!";
+                lblResult.Content = "There's no internet connection and the countries were not previously loaded." +
+                                   Environment.NewLine + "Try again later.";
 
-                //lblStatus.Text = "Primeira inicialização deverá ter ligação à internet";
+                lblStatus.Content = "You need to have internet connection for the first boot.";
                 return;
             }
 
             cbCountries.ItemsSource = Countries;
-            cbCountries.DisplayMemberPath = "name";
+            cbCountries.DisplayMemberPath = "Name";
 
-            //lblResultado.Text = "Countries loaded";
+            lblResult.Content = "Countries loaded!";
 
             if (load)
             {
-                //lblStatus.Text = string.Format($"Taxas carregadas da internet em {DateTime.Now}");
+                lblStatus.Content = string.Format($"Countries loaded in {DateTime.Now}");
             }
-
             else
             {
-                //lblStatus.Text = string.Format("Taxas carregadas da Base de Dados");
+                lblStatus.Content = "Countries loaded from database.";
             }
         }
 
-        private async Task LoadApi()
+        private async Task LoadApiCountries()
         {
-            var response = await apiService.GetCountries("http://restcountries.eu/", "rest/v2/all");
+            var response = await apiService.GetCountries("http://restcountries.eu/rest/v2/", "all");
 
             Countries = (List<Country>)response.Result;
-
-            //dataService.DeleteData();
-            //dataService.SaveData(Countries);
+            dataService.DeleteData();
+            dataService.SaveDataCountries(Countries);
         }
 
         private void LoadLocalCountries()
         {
-            //TODO Countries = dataService.GetData();
+            Countries = dataService.GetData();
         }
-        private void cbCountries_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+
+        private void CbCountries_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
         {
             LoadCountryInfo();
         }
 
         private void LoadCountryInfo()
         {
-            lblCapital.Content = $"Capital: {Countries[cbCountries.SelectedIndex].capital}";
-            lblRegion.Content = $"Region: {Countries[cbCountries.SelectedIndex].region}";
-            lblSubregion.Content = $"Subregion: {Countries[cbCountries.SelectedIndex].subregion}";
-            lblPopulation.Content = $"Population: {Countries[cbCountries.SelectedIndex].population}";
-            lblGini.Content = $"Gini: {Countries[cbCountries.SelectedIndex].gini}";
-            //lblFlag.Flag = $"Capital: {Countries[cbCountries.SelectedIndex].flag}";
+            lblCapital.Content = $"Capital: {Countries[cbCountries.SelectedIndex].Capital}";
+            lblRegion.Content = $"Region: {Countries[cbCountries.SelectedIndex].Region}";
+            lblSubregion.Content = $"Subregion: {Countries[cbCountries.SelectedIndex].Subregion}";
+            lblPopulation.Content = $"Population: {Countries[cbCountries.SelectedIndex].Population}";
+            lblGini.Content = $"Gini: {Countries[cbCountries.SelectedIndex].Gini}";
+
+            //Abrir numa nova janela com tradutor ou wtr
+            lblDE.Content = $"German: {Countries[cbCountries.SelectedIndex].Translations.De}";
+            lblES.Content = $"Spanish: {Countries[cbCountries.SelectedIndex].Translations.Es}";
+            lblFR.Content = $"French: {Countries[cbCountries.SelectedIndex].Translations.Fr}";
+            lblJA.Content = $"Japanese: {Countries[cbCountries.SelectedIndex].Translations.Ja}";
+            lblIT.Content = $"Italian: {Countries[cbCountries.SelectedIndex].Translations.It}";
+            lblBR.Content = $"Brazilian: {Countries[cbCountries.SelectedIndex].Translations.Br}";
+            lblPT.Content = $"Portuguese: {Countries[cbCountries.SelectedIndex].Translations.Pt}";
+            lblNL.Content = $"Dutch: {Countries[cbCountries.SelectedIndex].Translations.Nl}";
+            lblHR.Content = $"Croatian: {Countries[cbCountries.SelectedIndex].Translations.Hr}";
+            lblFA.Content = $"Arabian: {Countries[cbCountries.SelectedIndex].Translations.Fa}";
+
+            try
+            {
+                imgFlag.Source = new BitmapImage(new Uri($@"\Images\Flags\{Countries.name.ToLower()}.png", UriKind.Relative));
+            }
+            catch (Exception)
+            {
+                imgFlag.Source = new BitmapImage(new Uri(@"\Images\Flags\portugal.jpg", UriKind.Relative));
+            }
+
+
+
+            //byte[] pngBytes = new HtmlToImageConverter().GenerateImageFromFile($"Images/Flags/{cbCountries.SelectedItem}.svg,");
+            //var ms = new MemoryStream(pngBytes);
+            //Bitmap bmp = new Bitmap(ms);
+
+
+            //bmp.Save($"img{imgControl}.jpg");
+
+            //BitmapImage bitmapImage = new BitmapImage();
+
+            //bitmapImage.BeginInit();
+            //bitmapImage.UriSource = new Uri(AppDomain.CurrentDomain.BaseDirectory +
+            //    $"img{imgControl}.jpg", UriKind.Absolute);
+            //bitmapImage.EndInit();
+
+            //imgFlag.Source = bitmapImage;
         }
     }
 }

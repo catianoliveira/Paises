@@ -7,14 +7,30 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="550" Width="1000">
     <Grid>
-        <ComboBox x:Name="cbCountries" HorizontalAlignment="Left" Margin="144,49,0,0" VerticalAlignment="Top" Width="228" SelectionChanged="cbCountries_SelectionChanged"/>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <ComboBox x:Name="cbCountries" HorizontalAlignment="Left" Margin="144,49,0,0" VerticalAlignment="Top" Width="228" SelectionChanged="CbCountries_SelectionChanged" Grid.ColumnSpan="2"/>
         <Label Content="Country:" HorizontalAlignment="Left" Margin="76,42,0,0" VerticalAlignment="Top" FontSize="14"/>
-        <Image x:Name="imgFlag" HorizontalAlignment="Left" Height="104" Margin="666,364,0,0" VerticalAlignment="Top" Width="186" Stretch="UniformToFill"/>
+        <Image x:Name="imgFlag" HorizontalAlignment="Left" Height="104" Margin="415,49,0,0" VerticalAlignment="Top" Width="186" Stretch="UniformToFill" Grid.Column="1"/>
+        <Label x:Name="lblStatus" Content="Label" HorizontalAlignment="Left" Margin="41,10,0,0" VerticalAlignment="Top"/>
         <Label x:Name="lblCapital" Content="Label" HorizontalAlignment="Left" Margin="76,158,0,0" VerticalAlignment="Top" Height="30" Width="230"/>
+        <Label x:Name="lblDE" Content="Label" HorizontalAlignment="Left" Margin="349,311,0,0" VerticalAlignment="Top"/>
+        <Label x:Name="lblJA" Content="Label" HorizontalAlignment="Left" Margin="349,218,0,0" VerticalAlignment="Top"/>
+        <Label x:Name="lblBR" Content="Label" HorizontalAlignment="Left" Margin="349,249,0,0" VerticalAlignment="Top"/>
+        <Label x:Name="lblFR" Content="Label" HorizontalAlignment="Left" Margin="349,158,0,0" VerticalAlignment="Top"/>
+        <Label x:Name="lblES" Content="Label" HorizontalAlignment="Left" Margin="349,188,0,0" VerticalAlignment="Top"/>
+        <Label x:Name="lblPT" Content="Label" HorizontalAlignment="Left" Margin="349,280,0,0" VerticalAlignment="Top"/>
+        <Label x:Name="lblNL" Content="Label" HorizontalAlignment="Left" Margin="349,338,0,0" VerticalAlignment="Top"/>
+        <Label x:Name="lblHR" Content="Label" HorizontalAlignment="Left" Margin="349,364,0,0" VerticalAlignment="Top"/>
+        <Label x:Name="lblIT" Content="Label" HorizontalAlignment="Left" Margin="349,395,0,0" VerticalAlignment="Top"/>
+        <Label x:Name="lblFA" Content="Label" HorizontalAlignment="Left" Margin="349,426,0,0" VerticalAlignment="Top"/>
         <Label x:Name="lblSubregion" Content="Label" HorizontalAlignment="Left" Margin="76,218,0,0" VerticalAlignment="Top"/>
         <Label x:Name="lblPopulation" Content="Label" HorizontalAlignment="Left" Margin="76,250,0,0" VerticalAlignment="Top"/>
         <Label x:Name="lblGini" Content="Label" HorizontalAlignment="Left" Margin="76,280,0,0" VerticalAlignment="Top"/>
         <Label x:Name="lblRegion" Content="Label" HorizontalAlignment="Left" Margin="76,188,0,0" VerticalAlignment="Top"/>
+        <Label x:Name="lblResult" Content="Label" HorizontalAlignment="Left" Margin="76,450,0,0" VerticalAlignment="Top"/>
 
     </Grid>
 </Window>

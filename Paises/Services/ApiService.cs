@@ -10,18 +10,18 @@ namespace Paises.Services
 {
     public class ApiService
     {
-        public async Task<Response> GetCountries(string urlBase, string controller) //tarefa do metodo é devolver uma response - vai buscar taxas
+        public async Task<Response> GetCountries(string urlBase, string controller)
         {
             try
             {
-                var client = new HttpClient(); //faz a ligação externa via http
-                client.BaseAddress = new Uri(urlBase); //endereço base, onde está a api
+                var client = new HttpClient();
+                client.BaseAddress = new Uri(urlBase);
 
-                var response = await client.GetAsync(controller); //controlador da api (/api/rates), await para app continuar a correr enquanto vai buscar taxas
+                var response = await client.GetAsync(controller);
 
-                var result = await response.Content.ReadAsStringAsync(); //vai buscar conteudo do response e lê como uma string 
+                var result = await response.Content.ReadAsStringAsync();
 
-                if (!response.IsSuccessStatusCode)  //caso não se consiga ligar ou houver algum problema
+                if (!response.IsSuccessStatusCode)
                 {
                     return new Response
                     {
@@ -31,7 +31,6 @@ namespace Paises.Services
                 }
 
                 var countries = JsonConvert.DeserializeObject<List<Country>>(result);
-                //usa o jsonconvert para converter numa lista do tipo rate
 
                 return new Response
                 {
@@ -39,12 +38,12 @@ namespace Paises.Services
                     Result = countries
                 };
             }
-            catch (Exception ex)
+            catch (Exception e)
             {
                 return new Response
                 {
                     IsSuccess = false,
-                    Message = ex.Message
+                    Message = e.Message
                 };
             }
         }

@@ -8,9 +8,9 @@ namespace Paises.Modelos
 {
     public class RegionalBlock
     {
-        public string acronym { get; set; }
-        public string name { get; set; }
-        public List<object> otherAcronyms { get; set; }
-        public List<object> otherNames { get; set; }
+        public string Acronym { get; set; }
+        public string Name { get; set; }
+        public List<object> OtherAcronyms { get; set; }
+        public List<object> OtherNames { get; set; }
     }
 }
