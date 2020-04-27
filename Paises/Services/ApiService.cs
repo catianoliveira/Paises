@@ -10,15 +10,17 @@ namespace Paises.Services
 {
     public class ApiService
     {
-        public async Task<Response> GetCountries(string urlBase, string controller)
+        public async Task<Response> GetCountries(string urlBase, string apiPath)
         {
             try
             {
-                var client = new HttpClient();
-                client.BaseAddress = new Uri(urlBase);
+                var client = new HttpClient(); // cliente prepara chamada a um servidor (cliente é alguem que pede algo)
 
-                var response = await client.GetAsync(controller);
+                client.BaseAddress = new Uri(urlBase); // "Qual é a morada que eu vou chamar? (que é sempre um URI)"
 
+                var response = await client.GetAsync(apiPath); // para este clt configurado previamente, vai buscar a info dos clints de forma assincrona
+
+                //le a resposta e converte a de binario para string 
                 var result = await response.Content.ReadAsStringAsync();
 
                 if (!response.IsSuccessStatusCode)
@@ -26,11 +28,12 @@ namespace Paises.Services
                     return new Response
                     {
                         IsSuccess = false,
-                        Message = result
+                        Message = result,
+
                     };
                 }
 
-                var countries = JsonConvert.DeserializeObject<List<Country>>(result);
+                var countries = JsonConvert.DeserializeObject<List<Country>>(result, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
 
                 return new Response
                 {
@@ -38,12 +41,12 @@ namespace Paises.Services
                     Result = countries
                 };
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
                 return new Response
                 {
                     IsSuccess = false,
-                    Message = e.Message
+                    Message = ex.Message,
                 };
             }
         }

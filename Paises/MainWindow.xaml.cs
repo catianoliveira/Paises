@@ -1,7 +1,10 @@
 ﻿using Paises.Modelos;
 using Paises.Services;
+using Svg;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
+using System.Net;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media.Imaging;
@@ -16,31 +19,27 @@ namespace Paises
         #region Attributes
 
         private List<Country> Countries;
-
         private NetworkService networkService;
-
         private ApiService apiService;
-
-        private DialogService dialogService;
-
         private DataService dataService;
-
+        private DialogService dialogService;
         #endregion
 
         public MainWindow()
         {
+            WindowStartupLocation = WindowStartupLocation.CenterScreen;
             InitializeComponent();
             networkService = new NetworkService();
             apiService = new ApiService();
             dataService = new DataService();
-
             LoadCountries();
         }
 
         private async void LoadCountries()
         {
-            dataService.CreateDataCountries();
-            dataService.CreateDataTranslations();
+            dataService.CreateDatabase();
+            dataService.CreateTranslations();
+            dataService.CreateLanguages();
 
             bool load;
 
@@ -62,7 +61,7 @@ namespace Paises
 
             if (Countries.Count == 0)
             {
-                lblResult.Content = "There's no internet connection and the countries were not previously loaded." +
+                lblResult.Content = "There's no internet connection and the data wasn't loaded previously." +
                                    Environment.NewLine + "Try again later.";
 
                 lblStatus.Content = "You need to have internet connection for the first boot.";
@@ -72,83 +71,100 @@ namespace Paises
             cbCountries.ItemsSource = Countries;
             cbCountries.DisplayMemberPath = "Name";
 
+
+            progressBar.Value = 100;
+
             lblResult.Content = "Countries loaded!";
 
             if (load)
             {
-                lblStatus.Content = string.Format($"Countries loaded in {DateTime.Now}");
+                //TODO
+                lblStatus.Content = string.Format($"Countries loaded in {DateTime.Today.DayOfWeek}");
             }
             else
             {
-                lblStatus.Content = "Countries loaded from database.";
+                lblStatus.Content = "Countries loaded from the database.";
             }
+            progressBar.Value = 100;
         }
 
         private async Task LoadApiCountries()
         {
+            progressBar.Value = 0;
+
             var response = await apiService.GetCountries("http://restcountries.eu/rest/v2/", "all");
 
             Countries = (List<Country>)response.Result;
             dataService.DeleteData();
-            dataService.SaveDataCountries(Countries);
+            dataService.SaveData(Countries);
+
+            foreach (var country1 in Countries)
+            {
+                WebClient client = new WebClient();
+                client.DownloadFile($"{country1.Flag}", $"Images/{country1.Name}.svg");
+                client.Dispose();
+
+                //string flagSvg = $@"Images/{country1.Name}.svg";
+
+                //var svg = SvgDocument.Open(flagSvg);
+
+                //Bitmap map = svg.Draw(400, 230);
+
+                //string flagJpg = $@"Images/{country1.Name}.jpg";
+
+                //map.Save(flagJpg);
+            }
         }
 
         private void LoadLocalCountries()
         {
             Countries = dataService.GetData();
         }
-
         private void CbCountries_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
         {
-            LoadCountryInfo();
-        }
+            Country country = Countries[cbCountries.SelectedIndex];
 
-        private void LoadCountryInfo()
-        {
-            lblCapital.Content = $"Capital: {Countries[cbCountries.SelectedIndex].Capital}";
-            lblRegion.Content = $"Region: {Countries[cbCountries.SelectedIndex].Region}";
-            lblSubregion.Content = $"Subregion: {Countries[cbCountries.SelectedIndex].Subregion}";
-            lblPopulation.Content = $"Population: {Countries[cbCountries.SelectedIndex].Population}";
-            lblGini.Content = $"Gini: {Countries[cbCountries.SelectedIndex].Gini}";
+            lblCapital.Content = $"Capital: {country.Capital}";
+            lblRegion.Content = $"Region: {country.Region}";
+            lblSubregion.Content = $"Subregion: {country.Subregion}";
+            lblPopulation.Content = $"Population: {country.Population}";
+            lblGini.Content = $"Gini: {country.Gini}";
 
-            //Abrir numa nova janela com tradutor ou wtr
-            lblDE.Content = $"German: {Countries[cbCountries.SelectedIndex].Translations.De}";
-            lblES.Content = $"Spanish: {Countries[cbCountries.SelectedIndex].Translations.Es}";
-            lblFR.Content = $"French: {Countries[cbCountries.SelectedIndex].Translations.Fr}";
-            lblJA.Content = $"Japanese: {Countries[cbCountries.SelectedIndex].Translations.Ja}";
-            lblIT.Content = $"Italian: {Countries[cbCountries.SelectedIndex].Translations.It}";
-            lblBR.Content = $"Brazilian: {Countries[cbCountries.SelectedIndex].Translations.Br}";
-            lblPT.Content = $"Portuguese: {Countries[cbCountries.SelectedIndex].Translations.Pt}";
-            lblNL.Content = $"Dutch: {Countries[cbCountries.SelectedIndex].Translations.Nl}";
-            lblHR.Content = $"Croatian: {Countries[cbCountries.SelectedIndex].Translations.Hr}";
-            lblFA.Content = $"Arabian: {Countries[cbCountries.SelectedIndex].Translations.Fa}";
+            lblDE.Content = $"German: {country.Translations.De}";
+            lblES.Content = $"Spanish: {country.Translations.Es}";
+            lblFR.Content = $"French: {country.Translations.Fr}";
+            lblJA.Content = $"Japanese: {country.Translations.Ja}";
+            lblIT.Content = $"Italian: {country.Translations.It}";
+            lblBR.Content = $"Brazilian: {country.Translations.Br}";
+            lblPT.Content = $"Portuguese: {country.Translations.Pt}";
+            lblNL.Content = $"Dutch: {country.Translations.Nl}";
+            lblHR.Content = $"Croatian: {country.Translations.Hr}";
+            lblFA.Content = $"Arabian: {country.Translations.Fa}";
 
-            try
-            {
-                imgFlag.Source = new BitmapImage(new Uri($@"\Images\Flags\{Countries.name.ToLower()}.png", UriKind.Relative));
-            }
-            catch (Exception)
-            {
-                imgFlag.Source = new BitmapImage(new Uri(@"\Images\Flags\portugal.jpg", UriKind.Relative));
-            }
+            //BitmapImage bitmap = new BitmapImage();
 
+            //bitmap.BeginInit();
+            //bitmap.UriSource = new Uri(AppDomain.CurrentDomain.BaseDirectory + $@"Images/{country.Name}.svg", UriKind.Absolute);
+            //bitmap.EndInit();
 
+            //imgFlag.Source = 
 
-            //byte[] pngBytes = new HtmlToImageConverter().GenerateImageFromFile($"Images/Flags/{cbCountries.SelectedItem}.svg,");
-            //var ms = new MemoryStream(pngBytes);
-            //Bitmap bmp = new Bitmap(ms);
+            string flagSvg = $@"Images/{country.Name}.svg";
 
+            var svg = SvgDocument.Open(flagSvg);
 
-            //bmp.Save($"img{imgControl}.jpg");
+            Bitmap map = svg.Draw(400, 230);
 
-            //BitmapImage bitmapImage = new BitmapImage();
+            string flagJpg = $@"Images/{country.Name}.jpg";
 
-            //bitmapImage.BeginInit();
-            //bitmapImage.UriSource = new Uri(AppDomain.CurrentDomain.BaseDirectory +
-            //    $"img{imgControl}.jpg", UriKind.Absolute);
-            //bitmapImage.EndInit();
+            map.Save(flagJpg);
+            BitmapImage bitmap = new BitmapImage();
 
-            //imgFlag.Source = bitmapImage;
+            bitmap.BeginInit();
+            bitmap.UriSource = new Uri(AppDomain.CurrentDomain.BaseDirectory + flagJpg, UriKind.Absolute);
+            bitmap.EndInit();
+
+            imgFlag.Source = bitmap;
         }
     }
 }

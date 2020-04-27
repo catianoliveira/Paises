@@ -12,18 +12,20 @@ namespace Paises.Services
             try
             {
                 using (client.OpenRead("http://clients3.google.com/generate_204"))
-
+                {
                     return new Response
-                    {
+                    { 
                         IsSuccess = true
                     };
+                }
             }
-            catch
+            catch (System.Exception)
             {
+
                 return new Response
                 {
                     IsSuccess = false,
-                    Message = "No internet connection."
+                    Message = "Configure a sua ligação á internet."
                 };
             }
         }

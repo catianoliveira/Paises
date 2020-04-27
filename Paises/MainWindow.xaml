@@ -13,7 +13,7 @@
         </Grid.ColumnDefinitions>
         <ComboBox x:Name="cbCountries" HorizontalAlignment="Left" Margin="144,49,0,0" VerticalAlignment="Top" Width="228" SelectionChanged="CbCountries_SelectionChanged" Grid.ColumnSpan="2"/>
         <Label Content="Country:" HorizontalAlignment="Left" Margin="76,42,0,0" VerticalAlignment="Top" FontSize="14"/>
-        <Image x:Name="imgFlag" HorizontalAlignment="Left" Height="104" Margin="415,49,0,0" VerticalAlignment="Top" Width="186" Stretch="UniformToFill" Grid.Column="1"/>
+        <Image x:Name="imgFlag" HorizontalAlignment="Left" Height="104" Margin="715,42,0,0" VerticalAlignment="Top" Width="186" Stretch="UniformToFill"/>
         <Label x:Name="lblStatus" Content="Label" HorizontalAlignment="Left" Margin="41,10,0,0" VerticalAlignment="Top"/>
         <Label x:Name="lblCapital" Content="Label" HorizontalAlignment="Left" Margin="76,158,0,0" VerticalAlignment="Top" Height="30" Width="230"/>
         <Label x:Name="lblDE" Content="Label" HorizontalAlignment="Left" Margin="349,311,0,0" VerticalAlignment="Top"/>
@@ -31,6 +31,7 @@
         <Label x:Name="lblGini" Content="Label" HorizontalAlignment="Left" Margin="76,280,0,0" VerticalAlignment="Top"/>
         <Label x:Name="lblRegion" Content="Label" HorizontalAlignment="Left" Margin="76,188,0,0" VerticalAlignment="Top"/>
         <Label x:Name="lblResult" Content="Label" HorizontalAlignment="Left" Margin="76,450,0,0" VerticalAlignment="Top"/>
+        <ProgressBar x:Name="progressBar" HorizontalAlignment="Left" Height="10" Margin="852,466,0,0" VerticalAlignment="Top" Width="100" Grid.ColumnSpan="2"/>
 
     </Grid>
 </Window>

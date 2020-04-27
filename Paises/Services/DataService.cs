@@ -19,7 +19,7 @@ namespace Paises.Services
 
         private string path = @"Data\Countries.sqlite";
 
-        public void CreateDataCountries()
+        public void CreateDatabase()
         {
             dialogService = new DialogService();
 
@@ -32,23 +32,27 @@ namespace Paises.Services
                 connection = new SQLiteConnection("Data Source=" + path);
                 connection.Open();
 
-                string sqlcommand = "create table if not exists Countries (Alpha2Code varchar(2), Name varchar(50), Capital varchar(50), " +
-                    "Region varchar(50), Subregion varchar(50), Population int, Gini real, Flag varchar(200))";
+                string sqlcommand = "create table if not exists Countries " +
+                    "(Alpha2Code varchar(2), Name varchar(50), Capital varchar(50), " +
+                    "Region varchar(50), " +
+                    "Subregion varchar(50), Population int," +
+                    "Gini real, Flag varchar(200))";
 
                 command = new SQLiteCommand(sqlcommand, connection);
 
                 command.ExecuteNonQuery();
             }
-            catch (Exception ex)
+            catch (Exception e)
             {
-                dialogService.ShowMessage("Error", ex.Message);
+                dialogService.ShowMessage("Error", e.Message);
             }
             finally
             {
                 connection.Close();
             }
         }
-        public void CreateDataTranslations() // passa aqui
+
+        public void CreateTranslations()
         {
             dialogService = new DialogService();
 
@@ -62,7 +66,7 @@ namespace Paises.Services
                 connection = new SQLiteConnection("Data Source=" + path);
                 connection.Open();
 
-                string sqlcommand = "create table if not exists translations " +
+                string sqlcommand = "Create table if not exists translations " +
                     "(Alpha2Code varchar(2), De varchar(50), Es varchar(50)," +
                     "Fr varchar(50), Ja varchar(50), It varchar(50)," +
                     "Br varchar(50), Pt varchar(50), Nl varchar(50)," +
@@ -72,6 +76,38 @@ namespace Paises.Services
 
                 command.ExecuteNonQuery();
             }
+            catch (Exception e)
+            {
+                dialogService.ShowMessage("Error", e.Message);
+            }
+            finally
+            {
+                connection.Close();
+            }
+        }
+
+        public void CreateLanguages()
+        {
+            dialogService = new DialogService();
+
+            if (!Directory.Exists("Data"))
+            {
+                Directory.CreateDirectory("Data");
+            }
+
+            try
+            {
+                connection = new SQLiteConnection("Data Source=" + path);
+                connection.Open();
+
+                string sqlcommand = "create table if not exists Languages " +
+                    "(Alpha2Code varchar(2), LanguageName varchar(50)," +
+                    "NativeName varchar(50))";
+
+                command = new SQLiteCommand(sqlcommand, connection);
+
+                command.ExecuteNonQuery();
+            }
             catch (Exception ex)
             {
                 dialogService.ShowMessage("Error", ex.Message);
@@ -81,7 +117,8 @@ namespace Paises.Services
                 connection.Close();
             }
         }
-        public void SaveDataCountries(List<Country> Countries)
+
+        public void SaveData(List<Country> Countries)
         {
             connection = new SQLiteConnection("Data Source=" + path);
 
@@ -107,6 +144,21 @@ namespace Paises.Services
 
                     command.ExecuteNonQuery(); // nao passa aqui
 
+
+                    foreach (var language in country.Languages)
+                    {
+                        string sqlLanguages = string.Format("insert into languages (Alpha2Code, LanguageName, NativeName)" +
+                            " values (@Alpha2Code, @LanguageName, @NativeName)");
+
+                        command = new SQLiteCommand(sqlLanguages, connection);
+
+                        command.Parameters.Add(new SQLiteParameter("@Alpha2Code", country.Alpha2Code));
+                        command.Parameters.Add(new SQLiteParameter("@LanguageName", language.Name));
+                        command.Parameters.Add(new SQLiteParameter("@NativeName", language.NativeName));
+
+                        command.ExecuteNonQuery();
+                    }
+
                     string sqlTranslation = string.Format("insert into translations (Alpha2Code, De, Es, Fr, Ja, It, Br, Pt, Nl, Hr, Fa)" +
                         " values (@Alpha2Code, @De, @Es, @Fr, @Ja, @It, @Br, @Pt, @Nl, @Hr, @Fa)");
 
@@ -124,12 +176,13 @@ namespace Paises.Services
                     command.Parameters.Add(new SQLiteParameter("@Hr", country.Translations.Hr));
                     command.Parameters.Add(new SQLiteParameter("@Fa", country.Translations.Fa));
 
-                    command.ExecuteNonQuery(); // nao passa aqui
+                    command.ExecuteNonQuery();
                 }
             }
-            catch (Exception ex)
+
+            catch (Exception e)
             {
-                dialogService.ShowMessage("merda 1", ex.Message);
+                dialogService.ShowMessage("Error", e.Message);
             }
             finally
             {
@@ -141,6 +194,7 @@ namespace Paises.Services
         {
             List<Country> countries = new List<Country>();
 
+
             SQLiteConnection connection = new SQLiteConnection("Data Source=" + path);
 
             try
@@ -149,30 +203,53 @@ namespace Paises.Services
 
                 string countriesSql = "select Alpha2Code, Name, Capital, Region, Subregion, Population, Gini, Flag from Countries";
 
-                SQLiteDataReader countriesReader = new SQLiteCommand(countriesSql, connection).ExecuteReader();
+                SQLiteDataReader reader = new SQLiteCommand(countriesSql, connection).ExecuteReader();
 
-                // se devolver linhas
-
-                // iterar cada pais, caso a query devolva.
-                while (countriesReader.Read())//enquanto tiver registos pra ler
+                while (reader.Read())
                 {
-                    Country currentCountry = new Country
+                    Country newCountry = new Country
                     {
-                        Alpha2Code = GetDBStringValue(countriesReader, 0),
-                        Name = GetDBStringValue(countriesReader, 1),
-                        Capital = GetDBStringValue(countriesReader, 2),
-                        Region = GetDBStringValue(countriesReader, 3),
-                        Subregion = GetDBStringValue(countriesReader, 4),
-                        Population = countriesReader.GetInt32(5),
-                        Gini = countriesReader.GetDouble(6),
-                        Flag = countriesReader.GetString(7),
+                        Alpha2Code = GetDBStringValue(reader, 0),
+                        Name = GetDBStringValue(reader, 1),
+                        Capital = GetDBStringValue(reader, 2),
+                        Region = GetDBStringValue(reader, 3),
+                        Subregion = GetDBStringValue(reader, 4),
+                        Population = reader.GetInt32(5),
+                        Gini = reader.GetDouble(6),
+                        Flag = reader.GetString(7),
                     };
 
+                    string sqlLanguages = "select LanguageName, NativeName from languages where alpha2code = @country";
 
-                    string sqlTran = "select De, Es, Fr, Ja, It, Br, Pt, Nl, Hr, Fa from translations where alpha2code = @country";
+                    command = new SQLiteCommand(sqlLanguages, connection);
+                    command.Parameters.AddWithValue("@country", reader.GetString(0));
 
-                    command = new SQLiteCommand(sqlTran, connection);
-                    command.Parameters.AddWithValue("@country", countriesReader.GetString(0));
+                    try
+                    {
+                        SQLiteDataReader readerLang = command.ExecuteReader();
+
+                        List<Language> languages = new List<Language>();
+
+                        while (readerLang.Read())
+                        {
+                            languages.Add(new Language
+                            {
+                                Name = GetDBStringValue(readerLang, 0),
+                                NativeName = GetDBStringValue(readerLang, 1),
+                            });
+                        }
+                        newCountry.Languages = languages;
+                    }
+                    catch (Exception e)
+                    {
+                        dialogService.ShowMessage("Error", e.Message);
+                        return null;
+                    }
+
+                    string sqlTranslations = "select De, Es, Fr, Ja, It, Br, Pt, Nl, Hr, Fa from translations where alpha2code = @country";
+
+                    command = new SQLiteCommand(sqlTranslations, connection);
+                    command.Parameters.AddWithValue("@country", reader.GetString(0));
 
                     try
                     {
@@ -193,7 +270,7 @@ namespace Paises.Services
                                 Hr = GetDBStringValue(readerTrans, 8),
                                 Fa = GetDBStringValue(readerTrans, 9),
                             };
-                            currentCountry.Translations = translations;
+                            newCountry.Translations = translations;
                         }
                     }
                     catch (Exception e)
@@ -201,17 +278,19 @@ namespace Paises.Services
                         dialogService.ShowMessage("Error", e.Message);
                         return null;
                     }
-                    countries.Add(currentCountry);
+                    countries.Add(newCountry);
                 }
 
                 return countries;
             }
+
             catch (Exception e)
             {
                 dialogService.ShowMessage("Error", e.Message);
                 return null;
             }
         }
+
         private string GetDBStringValue(SQLiteDataReader reader, int id)
         {
             return reader.IsDBNull(id) ? null : reader.GetString(id);
@@ -234,7 +313,7 @@ namespace Paises.Services
             }
             catch (Exception e)
             {
-                dialogService.ShowMessage("sera que da merda aqui??", e.Message);
+                dialogService.ShowMessage("Error", e.Message);
             }
             finally
             {
