@@ -4,6 +4,7 @@ using Svg;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
 using System.Net;
 using System.Threading.Tasks;
 using System.Windows;
@@ -56,6 +57,7 @@ namespace Paises
             else
             {
                 await LoadApiCountries();
+                FlagsDownload();
                 load = true;
             }
 
@@ -97,23 +99,59 @@ namespace Paises
             Countries = (List<Country>)response.Result;
             dataService.DeleteData();
             dataService.SaveData(Countries);
+        }
 
-            foreach (var country1 in Countries)
+        private void FlagsDownload()
+        {
+            WebClient wc = new WebClient();
+
+            foreach (var country in Countries)
             {
-                WebClient client = new WebClient();
-                client.DownloadFile($"{country1.Flag}", $"Images/{country1.Name}.svg");
-                client.Dispose();
+                try
+                {
+                    if (!File.Exists($@"Images_Jpg/{country.Alpha3Code}.jpg"))
+                    {
+                        wc.DownloadFile(country.Flag, $@"Images/{country.Alpha3Code}.svg");
 
-                //string flagSvg = $@"Images/{country1.Name}.svg";
-
-                //var svg = SvgDocument.Open(flagSvg);
-
-                //Bitmap map = svg.Draw(400, 230);
-
-                //string flagJpg = $@"Images/{country1.Name}.jpg";
-
-                //map.Save(flagJpg);
+                        ConvertSvgToJpg(country.Alpha3Code);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message, "Error");
+                }
             }
+            wc.Dispose();
+        }
+        private void ConvertSvgToJpg(string Name)
+        {
+            try
+            {
+                string flagSvg = $@"Images/{Name}.svg";
+
+                var svg = SvgDocument.Open(flagSvg);
+
+                Bitmap map = svg.Draw(400, 230);
+
+                string flagJpg = $@"Images_Jpg/{Name}.jpg";
+
+                map.Save(flagJpg);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Error");
+            }
+
+        }
+        private void ShowFlags(Country flag)
+        {
+            BitmapImage bitmap = new BitmapImage();
+
+            bitmap.BeginInit();
+            bitmap.UriSource = new Uri(AppDomain.CurrentDomain.BaseDirectory + $@"Images_Jpg/{flag.Alpha3Code}.jpg", UriKind.Absolute);
+            bitmap.EndInit();
+
+            imgFlag.Source = bitmap;
         }
 
         private void LoadLocalCountries()
@@ -141,30 +179,7 @@ namespace Paises
             lblHR.Content = $"Croatian: {country.Translations.Hr}";
             lblFA.Content = $"Arabian: {country.Translations.Fa}";
 
-            //BitmapImage bitmap = new BitmapImage();
-
-            //bitmap.BeginInit();
-            //bitmap.UriSource = new Uri(AppDomain.CurrentDomain.BaseDirectory + $@"Images/{country.Name}.svg", UriKind.Absolute);
-            //bitmap.EndInit();
-
-            //imgFlag.Source = 
-
-            string flagSvg = $@"Images/{country.Name}.svg";
-
-            var svg = SvgDocument.Open(flagSvg);
-
-            Bitmap map = svg.Draw(400, 230);
-
-            string flagJpg = $@"Images/{country.Name}.jpg";
-
-            map.Save(flagJpg);
-            BitmapImage bitmap = new BitmapImage();
-
-            bitmap.BeginInit();
-            bitmap.UriSource = new Uri(AppDomain.CurrentDomain.BaseDirectory + flagJpg, UriKind.Absolute);
-            bitmap.EndInit();
-
-            imgFlag.Source = bitmap;
+            ShowFlags(country);
         }
     }
 }
