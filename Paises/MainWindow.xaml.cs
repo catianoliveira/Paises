@@ -1,13 +1,17 @@
-﻿using Paises.Modelos;
+﻿using Newtonsoft.Json;
+using Paises.Modelos;
+using Paises.Models;
 using Paises.Services;
 using Svg;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Globalization;
 using System.IO;
 using System.Net;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
 namespace Paises
@@ -24,6 +28,7 @@ namespace Paises
         private ApiService apiService;
         private DataService dataService;
         private DialogService dialogService;
+        private MediaPlayer mediaPlayer = new MediaPlayer();
         #endregion
 
         public MainWindow()
@@ -34,6 +39,7 @@ namespace Paises
             apiService = new ApiService();
             dataService = new DataService();
             LoadCountries();
+            LoadAnthem();
         }
 
         private async void LoadCountries()
@@ -63,7 +69,7 @@ namespace Paises
 
             if (Countries.Count == 0)
             {
-                lblResult.Content = "There's no internet connection and the data wasn't loaded previously." +
+                lblResult.Content = "There's no internet connection and the data wasn't previously loaded." +
                                    Environment.NewLine + "Try again later.";
 
                 lblStatus.Content = "You need to have internet connection for the first boot.";
@@ -78,10 +84,11 @@ namespace Paises
 
             lblResult.Content = "Countries loaded!";
 
+            CultureInfo ci = new CultureInfo("en-EN");
+
             if (load)
             {
-                //TODO
-                lblStatus.Content = string.Format($"Countries loaded in {DateTime.Today.DayOfWeek}");
+                lblStatus.Content = string.Format($"Countries loaded on {DateTime.Now.ToString("D", ci)}");
             }
             else
             {
@@ -99,8 +106,9 @@ namespace Paises
             Countries = (List<Country>)response.Result;
             dataService.DeleteData();
             dataService.SaveData(Countries);
-        }
 
+
+        }
         private void FlagsDownload()
         {
             WebClient wc = new WebClient();
@@ -158,28 +166,49 @@ namespace Paises
         {
             Countries = dataService.GetData();
         }
+        private void LoadAnthem()
+        {
+            mediaPlayer.Open(new Uri($@"Audio/National Anthems/Afghanistan.mp3", UriKind.Relative));
+        }
+
         private void CbCountries_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
         {
             Country country = Countries[cbCountries.SelectedIndex];
 
-            lblCapital.Content = $"Capital: {country.Capital}";
-            lblRegion.Content = $"Region: {country.Region}";
-            lblSubregion.Content = $"Subregion: {country.Subregion}";
-            lblPopulation.Content = $"Population: {country.Population}";
-            lblGini.Content = $"Gini: {country.Gini}";
-
-            lblDE.Content = $"German: {country.Translations.De}";
-            lblES.Content = $"Spanish: {country.Translations.Es}";
-            lblFR.Content = $"French: {country.Translations.Fr}";
-            lblJA.Content = $"Japanese: {country.Translations.Ja}";
-            lblIT.Content = $"Italian: {country.Translations.It}";
-            lblBR.Content = $"Brazilian: {country.Translations.Br}";
-            lblPT.Content = $"Portuguese: {country.Translations.Pt}";
-            lblNL.Content = $"Dutch: {country.Translations.Nl}";
-            lblHR.Content = $"Croatian: {country.Translations.Hr}";
-            lblFA.Content = $"Arabian: {country.Translations.Fa}";
-
             ShowFlags(country);
+
+            lblCapital.Content = $"{country.Capital}";
+            lblRegion.Content = $"{country.Region}";
+            lblSubregion.Content = $"{country.Subregion}";
+            lblPopulation.Content = $"{country.Population}";
+            lblGini.Content = $"{country.Gini}";
+
+            lblDE.Content = $"{country.Translations.De}";
+            lblJA.Content = $"{country.Translations.Ja}";
+            lblPT.Content = $"{country.Translations.Pt}";
+
+            mediaPlayer.Open(new Uri($@"National Anthems/{country.Name}.mp3", UriKind.Relative));
+
+        }
+
+        public void GetUserCountryByIp()
+        {
+            IpInfo ipInfo = new IpInfo();
+            try
+            {
+                string info = new WebClient().DownloadString("http://ipinfo.io/");
+                ipInfo = JsonConvert.DeserializeObject<IpInfo>(info);
+                RegionInfo myRI1 = new RegionInfo(ipInfo.Country);
+                ipInfo.Country = myRI1.EnglishName;
+            }
+            catch (Exception)
+            {
+                ipInfo.Country = "Location not found";
+            }
+
+            //lblIP.Content = $"You're located in {ipInfo.City}, {ipInfo.Country}";
+
+            cbCountries.SelectedIndex = 0;
         }
     }
 }

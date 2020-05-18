@@ -14,13 +14,10 @@ namespace Paises.Services
         {
             try
             {
-                var client = new HttpClient(); // cliente prepara chamada a um servidor (cliente é alguem que pede algo)
+                var client = new HttpClient(); 
+                client.BaseAddress = new Uri(urlBase); 
 
-                client.BaseAddress = new Uri(urlBase); // "Qual é a morada que eu vou chamar? (que é sempre um URI)"
-
-                var response = await client.GetAsync(apiPath); // para este clt configurado previamente, vai buscar a info dos clints de forma assincrona
-
-                //le a resposta e converte a de binario para string 
+                var response = await client.GetAsync(apiPath); 
                 var result = await response.Content.ReadAsStringAsync();
 
                 if (!response.IsSuccessStatusCode)
