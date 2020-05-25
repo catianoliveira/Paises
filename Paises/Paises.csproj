@@ -136,7 +136,27 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Resource Include="Icons\1041633-128.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="1041633-128.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="2639757-128.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="2639757-128 %281%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Icons\2639757-128 %281%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="1063863-128.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="2561308-128.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

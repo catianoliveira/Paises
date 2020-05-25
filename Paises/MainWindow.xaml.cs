@@ -1,7 +1,4 @@
 ﻿using Newtonsoft.Json;
-using Paises.Modelos;
-using Paises.Models;
-using Paises.Services;
 using Svg;
 using System;
 using System.Collections.Generic;
@@ -13,6 +10,16 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Threading;
+using System.Xml;
+using System.Windows.Input;
+using System.Windows.Navigation;
+using System.Windows.Shapes;
+using System.Windows.Media.Animation;
+using System.Windows.Controls;
+using Paises.Modelos;
+using Paises.Services;
+using Paises.Models;
 
 namespace Paises
 {
@@ -40,6 +47,7 @@ namespace Paises
             dataService = new DataService();
             LoadCountries();
             LoadAnthem();
+            GetUserCountryByIp();
         }
 
         private async void LoadCountries()
@@ -171,7 +179,30 @@ namespace Paises
             mediaPlayer.Open(new Uri($@"Audio/National Anthems/Afghanistan.mp3", UriKind.Relative));
         }
 
-        private void CbCountries_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+
+        public void GetUserCountryByIp()
+        {
+            IpInfo ipInfo = new IpInfo();
+            try
+            {
+                string info = new WebClient().DownloadString("http://ipinfo.io/");
+                ipInfo = JsonConvert.DeserializeObject<IpInfo>(info);
+                RegionInfo myRI1 = new RegionInfo(ipInfo.Country);
+                ipInfo.Country = myRI1.EnglishName;
+            }
+            catch (Exception)
+            {
+                ipInfo.Country = "Location \nnot found";
+            }
+
+            lblIP.Content = $"You're located \nin {ipInfo.Country}";
+
+            cbCountries.SelectedIndex = 0;
+        }
+
+        
+
+        private void cbCountries_SelectionChanged_1(object sender, SelectionChangedEventArgs e)
         {
             Country country = Countries[cbCountries.SelectedIndex];
 
@@ -189,26 +220,68 @@ namespace Paises
 
             mediaPlayer.Open(new Uri($@"National Anthems/{country.Name}.mp3", UriKind.Relative));
 
+            lblInfo.Content = $"Playing \n{country.Name}'s \nnational anthem";
         }
 
-        public void GetUserCountryByIp()
+        private void btnClose_Click(object sender, RoutedEventArgs e)
         {
-            IpInfo ipInfo = new IpInfo();
-            try
-            {
-                string info = new WebClient().DownloadString("http://ipinfo.io/");
-                ipInfo = JsonConvert.DeserializeObject<IpInfo>(info);
-                RegionInfo myRI1 = new RegionInfo(ipInfo.Country);
-                ipInfo.Country = myRI1.EnglishName;
-            }
-            catch (Exception)
-            {
-                ipInfo.Country = "Location not found";
-            }
+            this.Close();
+        }
 
-            //lblIP.Content = $"You're located in {ipInfo.City}, {ipInfo.Country}";
+        private void ShowHideMenu(string Storyboard, Button btnHide, Button btnShow, StackPanel pnl)
+        {
+            Storyboard sb = Resources[Storyboard] as Storyboard;
+            sb.Begin(pnl);
 
-            cbCountries.SelectedIndex = 0;
+            if (Storyboard.Contains("Show"))
+            {
+                btnHide.Visibility = System.Windows.Visibility.Visible;
+                btnShow.Visibility = System.Windows.Visibility.Hidden;
+            }
+            else if (Storyboard.Contains("Hide"))
+            {
+                btnHide.Visibility = System.Windows.Visibility.Hidden;
+                btnShow.Visibility = System.Windows.Visibility.Visible;
+            }
+        }
+
+        private void btnRightMenuShow_Click(object sender, RoutedEventArgs e)
+        {
+            ShowHideMenu("sbShowRightMenu", btnRightMenuHide, btnRightMenuShow, pnlRightMenu);
+            mediaPlayer.Play();
+        }
+
+        private void btnRightMenuHide_Click(object sender, RoutedEventArgs e)
+        {
+            ShowHideMenu("sbHideRightMenu", btnRightMenuHide, btnRightMenuShow, pnlRightMenu);
+            mediaPlayer.Pause();
+        }
+
+        private void ShowHideMenu2(string Storyboard, Button btnHide, Button btnShow, StackPanel pnl)
+        {
+            Storyboard sb = Resources[Storyboard] as Storyboard;
+            sb.Begin(pnl);
+
+            if (Storyboard.Contains("Show"))
+            {
+                btnHide.Visibility = System.Windows.Visibility.Visible;
+                btnShow.Visibility = System.Windows.Visibility.Hidden;
+            }
+            else if (Storyboard.Contains("Hide"))
+            {
+                btnHide.Visibility = System.Windows.Visibility.Hidden;
+                btnShow.Visibility = System.Windows.Visibility.Visible;
+            }
+        }
+
+        private void btnRightMenuShow2_Click(object sender, RoutedEventArgs e)
+        {
+            ShowHideMenu2("sbShowRightMenu2", btnRightMenuHide2, btnRightMenuShow2, pnlRightMenu2);
+        }
+
+        private void btnRightMenuHide2_Click(object sender, RoutedEventArgs e)
+        {
+            ShowHideMenu2("sbHideRightMenu2", btnRightMenuHide2, btnRightMenuShow2, pnlRightMenu2);
         }
     }
 }

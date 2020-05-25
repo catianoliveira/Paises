@@ -4,34 +4,268 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Paises"
-        mc:Ignorable="d"
-        Title="MainWindow" Height="550" Width="1000">
-    <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto"/>
-            <ColumnDefinition/>
-        </Grid.ColumnDefinitions>
-        <ComboBox x:Name="cbCountries" HorizontalAlignment="Left" Margin="144,49,0,0" VerticalAlignment="Top" Width="228" SelectionChanged="CbCountries_SelectionChanged" Grid.ColumnSpan="2"/>
-        <Label Content="Country:" HorizontalAlignment="Left" Margin="76,42,0,0" VerticalAlignment="Top" FontSize="14"/>
-        <Image x:Name="imgFlag" HorizontalAlignment="Left" Height="104" Margin="715,42,0,0" VerticalAlignment="Top" Width="186" Stretch="UniformToFill"/>
-        <Label x:Name="lblStatus" Content="Label" HorizontalAlignment="Left" Margin="41,10,0,0" VerticalAlignment="Top"/>
-        <Label x:Name="lblCapital" Content="Label" HorizontalAlignment="Left" Margin="76,158,0,0" VerticalAlignment="Top" Height="30" Width="230"/>
-        <Label x:Name="lblDE" Content="Label" HorizontalAlignment="Left" Margin="349,311,0,0" VerticalAlignment="Top"/>
-        <Label x:Name="lblJA" Content="Label" HorizontalAlignment="Left" Margin="349,218,0,0" VerticalAlignment="Top"/>
-        <Label x:Name="lblBR" Content="Label" HorizontalAlignment="Left" Margin="349,249,0,0" VerticalAlignment="Top"/>
-        <Label x:Name="lblFR" Content="Label" HorizontalAlignment="Left" Margin="349,158,0,0" VerticalAlignment="Top"/>
-        <Label x:Name="lblES" Content="Label" HorizontalAlignment="Left" Margin="349,188,0,0" VerticalAlignment="Top"/>
-        <Label x:Name="lblPT" Content="Label" HorizontalAlignment="Left" Margin="349,280,0,0" VerticalAlignment="Top"/>
-        <Label x:Name="lblNL" Content="Label" HorizontalAlignment="Left" Margin="349,338,0,0" VerticalAlignment="Top"/>
-        <Label x:Name="lblHR" Content="Label" HorizontalAlignment="Left" Margin="349,364,0,0" VerticalAlignment="Top"/>
-        <Label x:Name="lblIT" Content="Label" HorizontalAlignment="Left" Margin="349,395,0,0" VerticalAlignment="Top"/>
-        <Label x:Name="lblFA" Content="Label" HorizontalAlignment="Left" Margin="349,426,0,0" VerticalAlignment="Top"/>
-        <Label x:Name="lblSubregion" Content="Label" HorizontalAlignment="Left" Margin="76,218,0,0" VerticalAlignment="Top"/>
-        <Label x:Name="lblPopulation" Content="Label" HorizontalAlignment="Left" Margin="76,250,0,0" VerticalAlignment="Top"/>
-        <Label x:Name="lblGini" Content="Label" HorizontalAlignment="Left" Margin="76,280,0,0" VerticalAlignment="Top"/>
-        <Label x:Name="lblRegion" Content="Label" HorizontalAlignment="Left" Margin="76,188,0,0" VerticalAlignment="Top"/>
-        <Label x:Name="lblResult" Content="Label" HorizontalAlignment="Left" Margin="76,450,0,0" VerticalAlignment="Top"/>
-        <ProgressBar x:Name="progressBar" HorizontalAlignment="Left" Height="10" Margin="852,466,0,0" VerticalAlignment="Top" Width="100" Grid.ColumnSpan="2"/>
+        Title="Countries Application" Height="544" Width="1000"
+       BorderBrush="Transparent" WindowStyle="None" BorderThickness="1" WindowStartupLocation="CenterScreen" AllowsTransparency="True" Background="Transparent">
 
-    </Grid>
+    <Window.Resources>
+
+        <Style x:Key="ScrollThumbs" TargetType="{x:Type Thumb}">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Thumb}">
+                        <Grid x:Name="Grid">
+                            <Rectangle HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Width="Auto" Height="Auto" Fill="Transparent" />
+                            <Border x:Name="Rectangle1" CornerRadius="10" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Width="Auto" Height="Auto"  Background="{TemplateBinding Background}" />
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="Tag" Value="Horizontal">
+                                <Setter TargetName="Rectangle1" Property="Width" Value="Auto" />
+                                <Setter TargetName="Rectangle1" Property="Height" Value="7" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+
+
+        <!--ScrollBars-->
+        <Style x:Key="{x:Type ScrollBar}" TargetType="{x:Type ScrollBar}">
+            <Setter Property="Stylus.IsFlicksEnabled" Value="false" />
+            <Setter Property="Foreground" Value="LightGray" />
+            <Setter Property="Background" Value="White" />
+            <Setter Property="Width" Value="10" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type ScrollBar}">
+                        <Grid x:Name="GridRoot" Width="10" Background="{TemplateBinding Background}">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="0.00002*" />
+                            </Grid.RowDefinitions>
+
+                            <Track x:Name="PART_Track" Grid.Row="0" IsDirectionReversed="true" Focusable="false">
+                                <Track.Thumb>
+                                    <Thumb x:Name="Thumb" Background="{TemplateBinding Foreground}" Style="{DynamicResource ScrollThumbs}" />
+                                </Track.Thumb>
+                                <Track.IncreaseRepeatButton>
+                                    <RepeatButton x:Name="PageUp" Command="ScrollBar.PageDownCommand" Opacity="0" Focusable="false" />
+                                </Track.IncreaseRepeatButton>
+                                <Track.DecreaseRepeatButton>
+                                    <RepeatButton x:Name="PageDown" Command="ScrollBar.PageUpCommand" Opacity="0" Focusable="false" />
+                                </Track.DecreaseRepeatButton>
+                            </Track>
+                        </Grid>
+
+                        <ControlTemplate.Triggers>
+                            <Trigger SourceName="Thumb" Property="IsMouseOver" Value="true">
+                                <Setter Value="{DynamicResource ButtonSelectBrush}" TargetName="Thumb" Property="Background" />
+                            </Trigger>
+                            <Trigger SourceName="Thumb" Property="IsDragging" Value="true">
+                                <Setter Value="{DynamicResource DarkBrush}" TargetName="Thumb" Property="Background" />
+                            </Trigger>
+
+                            <Trigger Property="IsEnabled" Value="false">
+                                <Setter TargetName="Thumb" Property="Visibility" Value="Collapsed" />
+                            </Trigger>
+                            <Trigger Property="Orientation" Value="Horizontal">
+                                <Setter TargetName="GridRoot" Property="LayoutTransform">
+                                    <Setter.Value>
+                                        <RotateTransform Angle="-90" />
+                                    </Setter.Value>
+                                </Setter>
+                                <Setter TargetName="PART_Track" Property="LayoutTransform">
+                                    <Setter.Value>
+                                        <RotateTransform Angle="-90" />
+                                    </Setter.Value>
+                                </Setter>
+                                <Setter Property="Width" Value="Auto" />
+                                <Setter Property="Height" Value="12" />
+                                <Setter TargetName="Thumb" Property="Tag" Value="Horizontal" />
+                                <Setter TargetName="PageDown" Property="Command" Value="ScrollBar.PageLeftCommand" />
+                                <Setter TargetName="PageUp" Property="Command" Value="ScrollBar.PageRightCommand" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style x:Key="LabelStyle" TargetType="Label">
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="FontSize" Value="12"/>
+        </Style>
+        <Style x:Key="BlueLabel" TargetType="Label" BasedOn="{StaticResource LabelStyle}">
+            <Setter Property="Foreground" Value="#FF0E6EDC"/>
+        </Style>
+        <Style   x:Key="RedLabel" TargetType="Label" BasedOn="{StaticResource LabelStyle}">
+            <Setter Property="Foreground" Value="#FFA42E2E"/>
+        </Style>
+        <Style x:Key="AddressStyle" TargetType="Label" >
+            <Setter Property="Padding" Value="10px 0 0 0"/>
+            <Setter Property="Margin" Value="0 0 0 0"  />
+        </Style>
+
+        <ControlTemplate x:Key="VerticalExpander" TargetType="{x:Type Expander}">
+            <Border Name="ContentBorder"
+                Width="0">
+                <ContentPresenter />
+            </Border>
+            <ControlTemplate.Triggers>
+                <Trigger Property="IsExpanded"
+                     Value="True">
+                    <Setter TargetName="ContentBorder"
+                        Property="Width"
+                        Value="Auto" />
+                </Trigger>
+            </ControlTemplate.Triggers>
+        </ControlTemplate>
+
+
+
+        <Storyboard x:Key="sbShowRightMenu" >
+            <ThicknessAnimation Storyboard.TargetProperty="Margin" From="0,-200,-550,0" To="0,-200,-380,0" DecelerationRatio=".9" Duration="0:0:1" />
+        </Storyboard>
+        <Storyboard x:Key="sbHideRightMenu">
+            <ThicknessAnimation Storyboard.TargetProperty="Margin" From="0,-200,-380,0" To="0,-200,-550,0" AccelerationRatio=".9" Duration="0:0:1" />
+        </Storyboard>
+
+        <Storyboard x:Key="sbShowRightMenu2" >
+            <ThicknessAnimation Storyboard.TargetProperty="Margin" From="0,-50,-550,0" To="0,-50,-380,0" DecelerationRatio=".9" Duration="0:0:1" />
+        </Storyboard>
+        <Storyboard x:Key="sbHideRightMenu2">
+            <ThicknessAnimation Storyboard.TargetProperty="Margin" From="0,-50,-380,0" To="0,-50,-550,0" AccelerationRatio=".9" Duration="0:0:1" />
+        </Storyboard>
+
+
+
+
+    </Window.Resources>
+
+    <Border CornerRadius="30" BorderThickness="10" BorderBrush="#FFEAEDF9">
+
+        <Border CornerRadius="15" BorderThickness="15" BorderBrush="WhiteSmoke">
+            <Grid Background="WhiteSmoke">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="533*"/>
+                    <ColumnDefinition Width="114*"/>
+                </Grid.ColumnDefinitions>
+
+
+
+
+
+                <StackPanel Panel.ZIndex="2" Name="pnlRightMenu" Orientation="Horizontal" Height="400" HorizontalAlignment="Right" Margin="0,-200,-550,0">
+                    <Grid>
+                        <Button Name="btnRightMenuHide" Width="46" Click="btnRightMenuHide_Click" Content="" BorderBrush="{x:Null}" Margin="-16,181,16,181" Visibility="Hidden" >
+                            <Button.Background>
+                                <ImageBrush ImageSource="2561308-128.png" Stretch="Uniform"/>
+                            </Button.Background>
+                        </Button>
+                        <Button Name="btnRightMenuShow" Click="btnRightMenuShow_Click" Content="" Margin="-12,181,22,181" BorderBrush="{x:Null}">
+                            <Button.Background>
+                                <ImageBrush ImageSource="1063863-128.png"/>
+                            </Button.Background>
+                        </Button>
+                    </Grid>
+                    <Border BorderBrush="#FFEAEDF9" BorderThickness="1" Width="150" Margin="0,154,0,164" Background="WhiteSmoke">
+                        <Label x:Name="lblInfo" Margin="9" FontFamily="Microsoft YaHei UI Light" Foreground="DarkGray" FontSize="10"/>
+                    </Border>
+                </StackPanel>
+
+                <StackPanel Panel.ZIndex="2" Name="pnlRightMenu2" Orientation="Horizontal" Height="400" HorizontalAlignment="Right" Margin="0,-50,-550,0">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="127*"/>
+                            <RowDefinition Height="273*"/>
+                        </Grid.RowDefinitions>
+                        <Button Name="btnRightMenuHide2" Width="46" Click="btnRightMenuHide2_Click" Content="" BorderBrush="{x:Null}" Margin="-16,53.667,16,177" Visibility="Hidden" Grid.Row="1" >
+                            <Button.Background>
+                                <ImageBrush ImageSource="2639757-128 (1).png" Stretch="Uniform"/>
+                            </Button.Background>
+                        </Button>
+                        <Button Name="btnRightMenuShow2" Click="btnRightMenuShow2_Click" Content="" Margin="-13,53.667,19,177" BorderBrush="{x:Null}" Grid.Row="1">
+                            <Button.Background>
+                                <ImageBrush ImageSource="2639757-128 (1).png" />
+                            </Button.Background>
+                        </Button>
+                    </Grid>
+                    <Border BorderBrush="#FFEAEDF9" BorderThickness="1" Width="150" Margin="0,164" Background="WhiteSmoke">
+                        <Label x:Name="lblIP" Margin="9" FontFamily="Microsoft YaHei UI Light" Foreground="DarkGray"/>
+                    </Border>
+                </StackPanel>
+
+
+
+
+                <Label x:Name="lblStatus" Content="" HorizontalAlignment="Left" Margin="270,10,0,0" VerticalAlignment="Top" Foreground="DarkGray" FontFamily="Microsoft YaHei UI Light"/>
+                <Label x:Name="lblCapital1" Content="Capital" HorizontalAlignment="Left" Margin="299,36,0,0" VerticalAlignment="Top" Height="40" Width="230" FontSize="16" FontFamily="Microsoft YaHei UI Light"/>
+                <Label x:Name="lblCapital" Content="" HorizontalAlignment="Left" Margin="326,70,0,0" VerticalAlignment="Top" BorderBrush="#FFB8B2B2" BorderThickness="1" MinWidth="150" FontFamily="Microsoft YaHei UI Light"/>
+                <Label x:Name="Translations" Content="Translations" HorizontalAlignment="Left" Margin="556,38,0,0" VerticalAlignment="Top" Height="40" Width="230" FontSize="16" Grid.ColumnSpan="3" FontFamily="Microsoft YaHei UI Light"/>
+                <Label x:Name="lblDE1" Content="German" HorizontalAlignment="Left" Margin="6,71,0,0" VerticalAlignment="Top" Height="40" Width="230" FontSize="14" Grid.Column="1" Grid.ColumnSpan="2" FontFamily="Microsoft YaHei UI Light"/>
+                <Label x:Name="lblJP1" Content="Japanese" HorizontalAlignment="Left" Margin="6,142,0,0" VerticalAlignment="Top" Height="40" Width="230" FontSize="14" Grid.Column="1" Grid.ColumnSpan="2" FontFamily="Microsoft YaHei UI Light"/>
+                <Label x:Name="lblPT1" Content="Portuguese" HorizontalAlignment="Left" Margin="6,218,0,0" VerticalAlignment="Top" Height="40" Width="230" FontSize="14" Grid.Column="1" Grid.ColumnSpan="2" FontFamily="Microsoft YaHei UI Light"/>
+                <Label x:Name="lblFR1" Content="" HorizontalAlignment="Left" Margin="420,308,0,0" VerticalAlignment="Top" Height="40" Width="230" FontSize="14" Grid.ColumnSpan="3" FontFamily="Microsoft YaHei UI Light"/>
+                <Label x:Name="lblDE" Content="" HorizontalAlignment="Left" Margin="29,101,0,0" VerticalAlignment="Top" Grid.Column="1" BorderBrush="#FFB8B2B2" BorderThickness="1" MinWidth="150" Grid.ColumnSpan="2" FontFamily="Microsoft YaHei UI Light"/>
+                <Label x:Name="lblJA" Content="" HorizontalAlignment="Left" Margin="29,173,0,0" VerticalAlignment="Top" Grid.Column="1" BorderBrush="#FFB8B2B2" BorderThickness="1" MinWidth="150" Grid.ColumnSpan="2" FontFamily="Microsoft YaHei UI Light"/>
+                <Label x:Name="lblFR" Content="" HorizontalAlignment="Left" Margin="206,164,-140,0" VerticalAlignment="Top" Grid.Column="3" BorderBrush="#FFB8B2B2" BorderThickness="1" FontFamily="Microsoft YaHei UI Light"/>
+                <Label x:Name="lblPT" Content="" HorizontalAlignment="Left" Margin="29,250,0,0" VerticalAlignment="Top" Grid.Column="1" BorderBrush="#FFB8B2B2" BorderThickness="1" MinWidth="150" Grid.ColumnSpan="2" FontFamily="Microsoft YaHei UI Light"/>
+                <Label x:Name="lblSubregion1" Content="Subregion" HorizontalAlignment="Left" Margin="299,220,0,0" VerticalAlignment="Top" Height="40" Width="230" FontSize="16" FontFamily="Microsoft YaHei UI Light"/>
+                <Label x:Name="lblSubregion" Content="" HorizontalAlignment="Left" Margin="326,256,0,0" VerticalAlignment="Top" BorderBrush="#FFB8B2B2" BorderThickness="1" MinWidth="150" FontFamily="Microsoft YaHei UI Light"/>
+                <Label x:Name="lblPopulation1" Content="Population" HorizontalAlignment="Left" Margin="299,300,0,0" VerticalAlignment="Top" Height="40" Width="230" FontSize="16" FontFamily="Microsoft YaHei UI Light"/>
+                <Label x:Name="lblPopulation" Content="" HorizontalAlignment="Left" Margin="326,340,0,0" VerticalAlignment="Top" BorderBrush="#FFB8B2B2" BorderThickness="1" MinWidth="150"/>
+                <Label x:Name="lblGini1" Content="Gini" HorizontalAlignment="Left" Margin="299,390,0,0" VerticalAlignment="Top" Height="40" Width="230" FontSize="16" FontFamily="Microsoft YaHei UI Light"/>
+                <Label x:Name="lblGini" Content="" HorizontalAlignment="Left" Margin="326,430,0,0" VerticalAlignment="Top" BorderBrush="#FFB8B2B2" BorderThickness="1" MinWidth="150" FontFamily="Microsoft YaHei UI Light"/>
+                <Label x:Name="lblRegion1" Content="Region" HorizontalAlignment="Left" Margin="299,124,0,0" VerticalAlignment="Top" Height="40" Width="230" FontSize="16" FontFamily="Microsoft YaHei UI Light"/>
+                <Label x:Name="lblRegion" Content="" HorizontalAlignment="Left" Margin="326,164,0,0" VerticalAlignment="Top" BorderBrush="#FFB8B2B2" BorderThickness="1" MinWidth="150" FontFamily="Microsoft YaHei UI Light"/>
+                <Label x:Name="lblResult" Content="" HorizontalAlignment="Left" Margin="156,456,-90,0" VerticalAlignment="Top" Grid.Column="3" FontFamily="Microsoft YaHei UI Light"/>
+                <Label x:Name="lblBorder" Content="" HorizontalAlignment="Left" Margin="15,318,0,0" VerticalAlignment="Top" Grid.Column="1" RenderTransformOrigin="0.5,0.5" Width="190" Height="128" BorderBrush="#FFC5BCBC" BorderThickness="1" Background="{x:Null}" Grid.ColumnSpan="2" FontFamily="Microsoft YaHei UI Light">
+                    <Label.RenderTransform>
+                        <TransformGroup>
+                            <ScaleTransform ScaleX="-1"/>
+                            <SkewTransform/>
+                            <RotateTransform/>
+                            <TranslateTransform/>
+                        </TransformGroup>
+                    </Label.RenderTransform>
+                </Label>
+
+
+
+                <StackPanel Margin="10">
+                    <WrapPanel HorizontalAlignment="Center"/>
+                </StackPanel>
+
+
+                <ProgressBar x:Name="progressBar" HorizontalAlignment="Left" Height="10" Margin="244,474,0,0" VerticalAlignment="Top" Width="100" Foreground="#FF2D3070" Grid.Column="1" Grid.ColumnSpan="2"/>
+                <Image x:Name="imgFlag" HorizontalAlignment="Left" Height="90" Margin="29,340,0,0" VerticalAlignment="Top" Width="150" Stretch="Uniform" Grid.Column="1"/>
+                <Border CornerRadius="15" BorderThickness="20" BorderBrush="#FFB1C9DE" Margin="0,0,343,0">
+
+                    <DockPanel Height="600" LastChildFill="False" Background="#2D3446" Margin="0,2,190,-122" RenderTransformOrigin="0.5,0.5">
+                        <DockPanel.RenderTransform>
+                            <TransformGroup>
+                                <ScaleTransform ScaleX="-1"/>
+                                <SkewTransform/>
+                                <RotateTransform/>
+                                <TranslateTransform/>
+                            </TransformGroup>
+                        </DockPanel.RenderTransform>
+                    </DockPanel>
+                </Border>
+                <ListBox x:Name ="cbCountries" HorizontalAlignment="Left" Height="454" VerticalAlignment="Top" Width="190" Margin="20,18,0,0" Background="#ffffff" SelectionChanged="cbCountries_SelectionChanged_1">
+                    <ListBox.Resources>
+                        <Style TargetType="Border">
+                            <Setter Property="CornerRadius" Value="10"/>
+                        </Style>
+                    </ListBox.Resources>
+                </ListBox>
+                <Button x:Name="btnClose" Content="" Grid.Column="2" HorizontalAlignment="Left" Margin="40,-10,-9,0" VerticalAlignment="Top" Width="35" Height="32" BorderBrush="{x:Null}" Click="btnClose_Click">
+                    <Button.Background>
+                        <ImageBrush ImageSource="1041633-128.png"/>
+                    </Button.Background>
+
+                </Button>
+            </Grid>
+        </Border>
+    </Border>
 </Window>
