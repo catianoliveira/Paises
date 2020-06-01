@@ -136,7 +136,12 @@
             <ThicknessAnimation Storyboard.TargetProperty="Margin" From="0,-50,-380,0" To="0,-50,-550,0" AccelerationRatio=".9" Duration="0:0:1" />
         </Storyboard>
 
-
+        <Storyboard x:Key="sbShowRightMenu3" >
+            <ThicknessAnimation Storyboard.TargetProperty="Margin" From="0,100,-550,0" To="0,100,-380,0" DecelerationRatio=".9" Duration="0:0:1" />
+        </Storyboard>
+        <Storyboard x:Key="sbHideRightMenu3">
+            <ThicknessAnimation Storyboard.TargetProperty="Margin" From="0,100,-380,0" To="0,100,-550,0" AccelerationRatio=".9" Duration="0:0:1" />
+        </Storyboard>
 
 
     </Window.Resources>
@@ -157,21 +162,24 @@
 
                 <StackPanel Panel.ZIndex="2" Name="pnlRightMenu" Orientation="Horizontal" Height="400" HorizontalAlignment="Right" Margin="0,-200,-550,0">
                     <Grid>
-                        <Button Name="btnRightMenuHide" Width="46" Click="btnRightMenuHide_Click" Content="" BorderBrush="{x:Null}" Margin="-16,181,16,181" Visibility="Hidden" >
+                        <Button Name="btnRightMenuHide" Width="50" Height="38" Click="btnRightMenuHide_Click" Content="" BorderBrush="{x:Null}" Margin="-16,181,14,181" Visibility="Hidden" >
                             <Button.Background>
-                                <ImageBrush ImageSource="2561308-128.png" Stretch="Uniform"/>
+                                <ImageBrush ImageSource="Icons/2561308-128.png" Stretch="Uniform"/>
                             </Button.Background>
                         </Button>
                         <Button Name="btnRightMenuShow" Click="btnRightMenuShow_Click" Content="" Margin="-12,181,22,181" BorderBrush="{x:Null}">
                             <Button.Background>
-                                <ImageBrush ImageSource="1063863-128.png"/>
+                                <ImageBrush ImageSource="Icons/1063863-128.png"/>
                             </Button.Background>
                         </Button>
                     </Grid>
                     <Border BorderBrush="#FFEAEDF9" BorderThickness="1" Width="150" Margin="0,154,0,164" Background="WhiteSmoke">
-                        <Label x:Name="lblInfo" Margin="9" FontFamily="Microsoft YaHei UI Light" Foreground="DarkGray" FontSize="10"/>
+                        <Label x:Name="lblInfo" Margin="9" FontFamily="Microsoft YaHei UI Light" Foreground="DarkGray" FontSize="10" HorizontalAlignment="Center"/>
                     </Border>
                 </StackPanel>
+
+
+
 
                 <StackPanel Panel.ZIndex="2" Name="pnlRightMenu2" Orientation="Horizontal" Height="400" HorizontalAlignment="Right" Margin="0,-50,-550,0">
                     <Grid>
@@ -181,24 +189,45 @@
                         </Grid.RowDefinitions>
                         <Button Name="btnRightMenuHide2" Width="46" Click="btnRightMenuHide2_Click" Content="" BorderBrush="{x:Null}" Margin="-16,53.667,16,177" Visibility="Hidden" Grid.Row="1" >
                             <Button.Background>
-                                <ImageBrush ImageSource="2639757-128 (1).png" Stretch="Uniform"/>
+                                <ImageBrush ImageSource="Icons/2639757-128 (1).png" Stretch="Uniform"/>
                             </Button.Background>
                         </Button>
-                        <Button Name="btnRightMenuShow2" Click="btnRightMenuShow2_Click" Content="" Margin="-13,53.667,19,177" BorderBrush="{x:Null}" Grid.Row="1">
+                        <Button Name="btnRightMenuShow2" Click="btnRightMenuShow2_Click" Content="" Margin="-16,54,19,177" BorderBrush="{x:Null}" Grid.Row="1">
                             <Button.Background>
-                                <ImageBrush ImageSource="2639757-128 (1).png" />
+                                <ImageBrush ImageSource="Icons/2639757-128 (1).png" />
                             </Button.Background>
                         </Button>
                     </Grid>
                     <Border BorderBrush="#FFEAEDF9" BorderThickness="1" Width="150" Margin="0,164" Background="WhiteSmoke">
-                        <Label x:Name="lblIP" Margin="9" FontFamily="Microsoft YaHei UI Light" Foreground="DarkGray"/>
+                        <Label x:Name="lblIP" Margin="9" FontFamily="Microsoft YaHei UI Light" Foreground="DarkGray" HorizontalAlignment="Center"/>
                     </Border>
                 </StackPanel>
 
+                <StackPanel Panel.ZIndex="2" Name="pnlRightMenu3" Orientation="Horizontal" Height="400" HorizontalAlignment="Right" Margin="0,100,-550,0">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="44*"/>
+                            <RowDefinition Height="83*"/>
+                            <RowDefinition Height="273*"/>
+                        </Grid.RowDefinitions>
+                        <Button Name="btnRightMenuHide3" Width="38" Height="38" Click="btnRightMenuHide3_Click" Content="" BorderBrush="{x:Null}" Margin="-15,54,22,181" Grid.Row="2" >
+                            <Button.Background>
+                                <ImageBrush ImageSource="Icons/372902-128.png" />
+                            </Button.Background>
+                        </Button>
+                        <Button Name="btnRightMenuShow3" Width="38" Height="38" Click="btnRightMenuShow3_Click" Content="" Margin="-15,54,22,181" BorderBrush="{x:Null}" Grid.Row="2" HorizontalAlignment="Right">
+                            <Button.Background>
+                                <ImageBrush ImageSource="Icons/372902-128.png" />
+                            </Button.Background>
+                        </Button>
+                    </Grid>
+                    <Border BorderBrush="#FFEAEDF9" BorderThickness="1" Width="150" Margin="0,164" Background="WhiteSmoke">
+                        <Label x:Name="lblCredit" Content="Cátia Oliveira&#x0a;Version 1.0" Margin="31,15,35,9" FontFamily="Microsoft YaHei UI Light" Foreground="DarkGray" HorizontalAlignment="Center"/>
+                    </Border>
+                </StackPanel>
 
-
-
-                <Label x:Name="lblStatus" Content="" HorizontalAlignment="Left" Margin="270,10,0,0" VerticalAlignment="Top" Foreground="DarkGray" FontFamily="Microsoft YaHei UI Light"/>
+                <Label x:Name="lblResult" Content="" HorizontalAlignment="Left" Margin="270,10,0,0" VerticalAlignment="Top" Foreground="DarkGray" FontFamily="Microsoft YaHei UI Light"/>
+                <Label x:Name="lblStatus" Content="" HorizontalAlignment="Left" Margin="299,467,0,0" VerticalAlignment="Top" Foreground="DarkGray" FontFamily="Microsoft YaHei UI Light"/>
                 <Label x:Name="lblCapital1" Content="Capital" HorizontalAlignment="Left" Margin="299,36,0,0" VerticalAlignment="Top" Height="40" Width="230" FontSize="16" FontFamily="Microsoft YaHei UI Light"/>
                 <Label x:Name="lblCapital" Content="" HorizontalAlignment="Left" Margin="326,70,0,0" VerticalAlignment="Top" BorderBrush="#FFB8B2B2" BorderThickness="1" MinWidth="150" FontFamily="Microsoft YaHei UI Light"/>
                 <Label x:Name="Translations" Content="Translations" HorizontalAlignment="Left" Margin="556,38,0,0" VerticalAlignment="Top" Height="40" Width="230" FontSize="16" Grid.ColumnSpan="3" FontFamily="Microsoft YaHei UI Light"/>
@@ -218,8 +247,7 @@
                 <Label x:Name="lblGini" Content="" HorizontalAlignment="Left" Margin="326,430,0,0" VerticalAlignment="Top" BorderBrush="#FFB8B2B2" BorderThickness="1" MinWidth="150" FontFamily="Microsoft YaHei UI Light"/>
                 <Label x:Name="lblRegion1" Content="Region" HorizontalAlignment="Left" Margin="299,124,0,0" VerticalAlignment="Top" Height="40" Width="230" FontSize="16" FontFamily="Microsoft YaHei UI Light"/>
                 <Label x:Name="lblRegion" Content="" HorizontalAlignment="Left" Margin="326,164,0,0" VerticalAlignment="Top" BorderBrush="#FFB8B2B2" BorderThickness="1" MinWidth="150" FontFamily="Microsoft YaHei UI Light"/>
-                <Label x:Name="lblResult" Content="" HorizontalAlignment="Left" Margin="156,456,-90,0" VerticalAlignment="Top" Grid.Column="3" FontFamily="Microsoft YaHei UI Light"/>
-                <Label x:Name="lblBorder" Content="" HorizontalAlignment="Left" Margin="15,318,0,0" VerticalAlignment="Top" Grid.Column="1" RenderTransformOrigin="0.5,0.5" Width="190" Height="128" BorderBrush="#FFC5BCBC" BorderThickness="1" Background="{x:Null}" Grid.ColumnSpan="2" FontFamily="Microsoft YaHei UI Light">
+                <Label x:Name="lblBorder" Content="" HorizontalAlignment="Left" Margin="15,318,0,0" VerticalAlignment="Top" Grid.Column="1" RenderTransformOrigin="0.5,0.5" Width="184" Height="128" BorderBrush="#FFC5BCBC" BorderThickness="1" Background="{x:Null}" FontFamily="Microsoft YaHei UI Light">
                     <Label.RenderTransform>
                         <TransformGroup>
                             <ScaleTransform ScaleX="-1"/>
@@ -238,7 +266,7 @@
 
 
                 <ProgressBar x:Name="progressBar" HorizontalAlignment="Left" Height="10" Margin="244,474,0,0" VerticalAlignment="Top" Width="100" Foreground="#FF2D3070" Grid.Column="1" Grid.ColumnSpan="2"/>
-                <Image x:Name="imgFlag" HorizontalAlignment="Left" Height="90" Margin="29,340,0,0" VerticalAlignment="Top" Width="150" Stretch="Uniform" Grid.Column="1"/>
+                <Image x:Name="imgFlag" HorizontalAlignment="Left" Height="90" Margin="32,337,0,0" VerticalAlignment="Top" Width="150" Stretch="Uniform" Grid.Column="1"/>
                 <Border CornerRadius="15" BorderThickness="20" BorderBrush="#FFB1C9DE" Margin="0,0,343,0">
 
                     <DockPanel Height="600" LastChildFill="False" Background="#2D3446" Margin="0,2,190,-122" RenderTransformOrigin="0.5,0.5">
@@ -261,7 +289,7 @@
                 </ListBox>
                 <Button x:Name="btnClose" Content="" Grid.Column="2" HorizontalAlignment="Left" Margin="40,-10,-9,0" VerticalAlignment="Top" Width="35" Height="32" BorderBrush="{x:Null}" Click="btnClose_Click">
                     <Button.Background>
-                        <ImageBrush ImageSource="1041633-128.png"/>
+                        <ImageBrush ImageSource="Icons/1041633-128.png"/>
                     </Button.Background>
 
                 </Button>

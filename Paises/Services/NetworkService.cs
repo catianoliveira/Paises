@@ -5,6 +5,10 @@ namespace Paises.Services
 {
     public class NetworkService
     {
+        /// <summary>
+        /// Checks if an internet connection exists
+        /// </summary>
+        /// <returns></returns>
         public Response CheckConnection()
         {
             var client = new WebClient();

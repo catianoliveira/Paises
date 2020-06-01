@@ -50,6 +50,10 @@ namespace Paises
             GetUserCountryByIp();
         }
 
+        /// <summary>
+        /// Creates database; 
+        /// Checks if there's a connection- if yes, calls LoadApiCountries(), if not then LoadLocalCountries()
+        /// </summary>
         private async void LoadCountries()
         {
             dataService.CreateDatabase();
@@ -71,7 +75,7 @@ namespace Paises
             else
             {
                 await LoadApiCountries();
-                FlagsDownload();
+                await FlagsDownload();
                 load = true;
             }
 
@@ -90,7 +94,7 @@ namespace Paises
 
             progressBar.Value = 100;
 
-            lblResult.Content = "Countries loaded!";
+            lblResult.Content = "Countries loaded with success!";
 
             CultureInfo ci = new CultureInfo("en-EN");
 
@@ -105,6 +109,11 @@ namespace Paises
             progressBar.Value = 100;
         }
 
+        /// <summary>
+        /// Loads countries from API;
+        /// Deletes data from database and then recreates it
+        /// </summary>
+        /// <returns></returns>
         private async Task LoadApiCountries()
         {
             progressBar.Value = 0;
@@ -114,31 +123,43 @@ namespace Paises
             Countries = (List<Country>)response.Result;
             dataService.DeleteData();
             dataService.SaveData(Countries);
-
-
         }
-        private void FlagsDownload()
+        
+        /// <summary>
+        /// Downloads flags
+        /// </summary>
+        /// <returns></returns>
+        private async Task FlagsDownload()
         {
             WebClient wc = new WebClient();
 
-            foreach (var country in Countries)
+            await Task.Run(() =>
             {
-                try
-                {
-                    if (!File.Exists($@"Images_Jpg/{country.Alpha3Code}.jpg"))
-                    {
-                        wc.DownloadFile(country.Flag, $@"Images/{country.Alpha3Code}.svg");
 
-                        ConvertSvgToJpg(country.Alpha3Code);
+                foreach (var country in Countries)
+                {
+                    try
+                    {
+                        if (!File.Exists($@"Images_Jpg/{country.Alpha3Code}.jpg"))
+                        {
+                            wc.DownloadFile(country.Flag, $@"Images/{country.Alpha3Code}.svg");
+
+                            ConvertSvgToJpg(country.Alpha3Code);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show(ex.Message, "Error");
                     }
                 }
-                catch (Exception ex)
-                {
-                    MessageBox.Show(ex.Message, "Error");
-                }
-            }
-            wc.Dispose();
+                wc.Dispose();
+            });
         }
+
+        /// <summary>
+        /// Converts flags from svg to jpg
+        /// </summary>
+        /// <param name="Name"></param>
         private void ConvertSvgToJpg(string Name)
         {
             try
@@ -159,6 +180,11 @@ namespace Paises
             }
 
         }
+        
+        /// <summary>
+        /// Gets the source of the image to to show it in the interface
+        /// </summary>
+        /// <param name="flag"></param>
         private void ShowFlags(Country flag)
         {
             BitmapImage bitmap = new BitmapImage();
@@ -170,16 +196,26 @@ namespace Paises
             imgFlag.Source = bitmap;
         }
 
-        private void LoadLocalCountries()
+
+        /// <summary>
+        /// Loads countries from database
+        /// </summary>
+        private async void LoadLocalCountries()
         {
-            Countries = dataService.GetData();
+            Countries = await dataService.GetData();
         }
+
+        /// <summary>
+        /// Loads Anthems
+        /// </summary>
         private void LoadAnthem()
         {
             mediaPlayer.Open(new Uri($@"Audio/National Anthems/Afghanistan.mp3", UriKind.Relative));
         }
 
-
+        /// <summary>
+        /// Gets user location from an ip api
+        /// </summary>
         public void GetUserCountryByIp()
         {
             IpInfo ipInfo = new IpInfo();
@@ -189,19 +225,23 @@ namespace Paises
                 ipInfo = JsonConvert.DeserializeObject<IpInfo>(info);
                 RegionInfo myRI1 = new RegionInfo(ipInfo.Country);
                 ipInfo.Country = myRI1.EnglishName;
+                lblIP.Content = $"You're located in \n{ipInfo.Country}";
             }
             catch (Exception)
             {
-                ipInfo.Country = "Location \nnot found";
+                lblIP.Content = "Location \nnot found";
             }
-
-            lblIP.Content = $"You're located \nin {ipInfo.Country}";
 
             cbCountries.SelectedIndex = 0;
         }
 
-        
 
+        /// <summary>
+        /// Gets the information of every country when selected country changes;
+        /// Stops the audio when selected country changes
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void cbCountries_SelectionChanged_1(object sender, SelectionChangedEventArgs e)
         {
             Country country = Countries[cbCountries.SelectedIndex];
@@ -221,6 +261,8 @@ namespace Paises
             mediaPlayer.Open(new Uri($@"National Anthems/{country.Name}.mp3", UriKind.Relative));
 
             lblInfo.Content = $"Playing \n{country.Name}'s \nnational anthem";
+
+            mediaPlayer.Stop();
         }
 
         private void btnClose_Click(object sender, RoutedEventArgs e)
@@ -228,6 +270,9 @@ namespace Paises
             this.Close();
         }
 
+        /// <summary>
+        /// Changes visibility of buttons when one of them is selected and plays/pauses the audio
+        /// </summary>
         private void ShowHideMenu(string Storyboard, Button btnHide, Button btnShow, StackPanel pnl)
         {
             Storyboard sb = Resources[Storyboard] as Storyboard;
@@ -257,6 +302,9 @@ namespace Paises
             mediaPlayer.Pause();
         }
 
+        /// <summary>
+        /// Changes visibility of buttons when one of them is selected
+        /// </summary>
         private void ShowHideMenu2(string Storyboard, Button btnHide, Button btnShow, StackPanel pnl)
         {
             Storyboard sb = Resources[Storyboard] as Storyboard;
@@ -282,6 +330,16 @@ namespace Paises
         private void btnRightMenuHide2_Click(object sender, RoutedEventArgs e)
         {
             ShowHideMenu2("sbHideRightMenu2", btnRightMenuHide2, btnRightMenuShow2, pnlRightMenu2);
+        }
+
+        private void btnRightMenuShow3_Click(object sender, RoutedEventArgs e)
+        {
+            ShowHideMenu2("sbShowRightMenu3", btnRightMenuHide3, btnRightMenuShow3, pnlRightMenu3);
+        }
+
+        private void btnRightMenuHide3_Click(object sender, RoutedEventArgs e)
+        {
+            ShowHideMenu2("sbHideRightMenu3", btnRightMenuHide3, btnRightMenuShow3, pnlRightMenu3);
         }
     }
 }

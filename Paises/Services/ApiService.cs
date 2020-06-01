@@ -10,6 +10,9 @@ namespace Paises.Services
 {
     public class ApiService
     {
+        /// <summary>
+        /// Gets data from the API
+        /// </summary>
         public async Task<Response> GetCountries(string urlBase, string apiPath)
         {
             try
