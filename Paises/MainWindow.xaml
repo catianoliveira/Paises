@@ -222,12 +222,12 @@
                         </Button>
                     </Grid>
                     <Border BorderBrush="#FFEAEDF9" BorderThickness="1" Width="150" Margin="0,164" Background="WhiteSmoke">
-                        <Label x:Name="lblCredit" Content="Cátia Oliveira&#x0a;Version 1.0" Margin="31,15,35,9" FontFamily="Microsoft YaHei UI Light" Foreground="DarkGray" HorizontalAlignment="Center"/>
+                        <Label x:Name="lblCredit" Content="Cátia Oliveira&#x0a;V 1.0&#x0a;05/06/2020" Margin="31,9,35,-1" FontFamily="Microsoft YaHei UI Light" Foreground="DarkGray" HorizontalAlignment="Center"/>
                     </Border>
                 </StackPanel>
-
-                <Label x:Name="lblResult" Content="" HorizontalAlignment="Left" Margin="270,10,0,0" VerticalAlignment="Top" Foreground="DarkGray" FontFamily="Microsoft YaHei UI Light"/>
-                <Label x:Name="lblStatus" Content="" HorizontalAlignment="Left" Margin="299,467,0,0" VerticalAlignment="Top" Foreground="DarkGray" FontFamily="Microsoft YaHei UI Light"/>
+                
+                <Label x:Name="lblResult" Content="" HorizontalAlignment="Left" Margin="299,467,0,0" VerticalAlignment="Top" Foreground="DarkGray" FontFamily="Microsoft YaHei UI Light"/>
+                <Label x:Name="lblStatus" Content="" HorizontalAlignment="Left" Margin="270,10,0,0" VerticalAlignment="Top" Foreground="DarkGray" FontFamily="Microsoft YaHei UI Light"/>
                 <Label x:Name="lblCapital1" Content="Capital" HorizontalAlignment="Left" Margin="299,36,0,0" VerticalAlignment="Top" Height="40" Width="230" FontSize="16" FontFamily="Microsoft YaHei UI Light"/>
                 <Label x:Name="lblCapital" Content="" HorizontalAlignment="Left" Margin="326,70,0,0" VerticalAlignment="Top" BorderBrush="#FFB8B2B2" BorderThickness="1" MinWidth="150" FontFamily="Microsoft YaHei UI Light"/>
                 <Label x:Name="Translations" Content="Translations" HorizontalAlignment="Left" Margin="556,38,0,0" VerticalAlignment="Top" Height="40" Width="230" FontSize="16" Grid.ColumnSpan="3" FontFamily="Microsoft YaHei UI Light"/>
